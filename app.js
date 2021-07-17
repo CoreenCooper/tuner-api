@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 });
 
 // catch all
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
     res.status(404).send("Page not found");
 });
 
