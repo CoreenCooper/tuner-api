@@ -1,9 +1,10 @@
 const db = require("../db/dbConfig");
 
 //index
-const getAllSongs = async () => {
+// unable to use WHERE playlist_id=$1",playlist_id)
+const getAllSongs = async (playlist_id) => {
   try {
-    const allSongs = await db.any("SELECT * FROM songs");
+    const allSongs = await db.any("SELECT * FROM songs WHERE playlist_id=1", playlist_id);
     return allSongs;
   } catch (error) {
     return error;
@@ -28,7 +29,7 @@ const addSong = async (newSong) => {
 //show
 const getSong = async (id) => {
   try {
-    const song = await db.one("SELECT * FROM songs WHERE id=$1", id);
+    const song = await db.any("SELECT * FROM songs WHERE id=$1", id);
     return song;
   } catch (error) {
     return error;
@@ -40,7 +41,7 @@ const updateSong = async (id, body) => {
   const { playlist_id, artist, song, album, release_date, is_favorite } = body;
     try {
       const updatedSong = await db.one(
-        "UPDATE songs SET playlist_id=$1, artist=$2, song=$3, album=$4, release_date=$5, is_favorite=$6 where id=$7 RETURNING *",
+        "UPDATE songs SET playlist_id=$1, artist=$2, song=$3, album=$4, release_date=$5, is_favorite=$6 WHERE id=$7 RETURNING *",
         [ playlist_id, artist, song, album, release_date, is_favorite, id]
       );
       return updatedSong;

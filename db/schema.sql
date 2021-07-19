@@ -2,11 +2,13 @@ DROP DATABASE IF EXISTS songs_dev;
 CREATE DATABASE songs_dev;
 \c songs_dev;
 
+-- parent
 CREATE TABLE playlists (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL
 );
 
+-- child
 CREATE TABLE songs (
     id SERIAL PRIMARY KEY,
     artist TEXT NOT NULL,

@@ -13,10 +13,18 @@ const {
 
 //index
 songs.get("/", async (req, res) => {
-  const allSongs = await getAllSongs();
+  const { playlistId } = req.params;
+  const allSongs = await getAllSongs(playlistId);
   res.json({ sucess: true, payload: allSongs });
   // res.json(allSongs);
 });
+// //index
+// songs.get("/", async (req, res) => {
+//   const allSongs = await getAllSongs();
+//   // console.log(allSongs);
+//   res.json({ sucess: true, payload: allSongs });
+//   // res.json(allSongs);
+// });
 
 //create
 songs.post("/", async (req, res) => {
