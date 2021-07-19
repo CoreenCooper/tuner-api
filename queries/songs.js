@@ -10,6 +10,21 @@ const getAllSongs = async () => {
   }
 };
 
+//create
+const addSong = async (newSong) => {
+  // console.log(newSong.artist)
+  const { playlist_id, artist, song, album, release_date, is_favorite } = newSong;
+  try {
+    const newSong = await db.one(
+      "INSERT INTO songs ( playlist_id, artist, song, album, release_date, is_favorite ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [playlist_id, artist, song, album, release_date, is_favorite]
+    );
+    return newSong;
+  } catch (error) {
+    return error;
+  }
+};
+
 //show
 const getSong = async (id) => {
   try {
@@ -22,31 +37,17 @@ const getSong = async (id) => {
 
 //update
 const updateSong = async (id, body) => {
-  const { name, album, time, is_favorite } = body;
+  const { playlist_id, artist, song, album, release_date, is_favorite } = body;
     try {
       const updatedSong = await db.one(
-        "UPDATE songs SET name=$1, album=$2, time=$3, is_favorite=$4 where id=$5 RETURNING *",
-        [ name, album, time, is_favorite, id]
+        "UPDATE songs SET playlist_id=$1, artist=$2, song=$3, album=$4, release_date=$5, is_favorite=$6 where id=$7 RETURNING *",
+        [ playlist_id, artist, song, album, release_date, is_favorite, id]
       );
       return updatedSong;
-    } catch (err) {
-      return err;
+    } catch (error) {
+      return error;
     }
   };
-
-//create
-const addSong = async (song) => {
-  const { name, album, time, is_favorite } = song;
-  try {
-    const newSong = await db.one(
-      "INSERT INTO songs ( name, album, time, is_favorite ) VALUES ($1, $2, $3, $4) RETURNING *",
-      [name, album, time, is_favorite]
-    );
-    return newSong;
-  } catch (error) {
-    return error;
-  }
-};
 
 //delete
 const deleteSong = async (id) => {
