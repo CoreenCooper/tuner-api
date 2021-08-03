@@ -1,6 +1,5 @@
 const express = require("express");
-// const playlistsController = require("./playlistsController");
-const songs = express.Router({mergeParams:true});
+const songs = express.Router({ mergeParams: true });
 const {
   getAllSongs,
   getSong,
@@ -9,61 +8,38 @@ const {
   updateSong,
 } = require("../queries/songs");
 
-// songs.use("/:song_id/playlists", playlistsController);
-
-//index
+// ROUTES
+// index
 songs.get("/", async (req, res) => {
-  const { playlistId } = req.params;
-  const allSongs = await getAllSongs(playlistId);
-  res.json({ sucess: true, payload: allSongs });
-  // res.json(allSongs);
+  const { playlist_id } = req.params;
+  // console.log(playlist_id)
+  // console.log(req.params, "ok")
+  const allSongs = await getAllSongs(playlist_id);
+  res.json(allSongs);
 });
-// //index
-// songs.get("/", async (req, res) => {
-//   const allSongs = await getAllSongs();
-//   // console.log(allSongs);
-//   res.json({ sucess: true, payload: allSongs });
-//   // res.json(allSongs);
-// });
 
-//create
+// create
 songs.post("/", async (req, res) => {
-  // const newSong = req.body;
-  // // console.log(newSong);
-  // const result = await addSong(newSong);
-  // res.json(result);
-  try {
-    const song = req.body;
-    const newSong = await addSong(song);
-    res.json(newSong);
-  } catch (error) {
-    return error;
-  }
+  const song = req.body;
+  const newSong = await addSong(song);
+  res.json(newSong);
 });
 
-//show
+// show - http://localhost:3003/playlists/:id/songs/:id
 // should a validation be placed at each endpoint?
 songs.get("/:id", async (req, res) => {
   const { id } = req.params;
   const song = await getSong(id);
-  res.json({ success: true, payload: song });
-  // try {
-  //   const song = await getSong(id);
-  //   if (song.id) {
-  //     res.json(song);
-  //   } else {
-  //     res.redirect("/*");
-  //   }
-  // } catch (error) {
-  //   return error;
-  // }
+  res.json(song);
 });
 
-//update
+// update - http://localhost:3003/playlists/:id/songs/:id
 // why is there validation here but not on post or show?
+// ???if not someone could leave the field blank causing a null value
 songs.put("/:id", async (req, res) => {
   const { body, params } = req;
   const { artist, song, album, release_date, is_favorite } = body;
+  console.log(body);
 
   if (!artist || !song || !album || !release_date || !is_favorite) {
     res.status(422).json({
@@ -85,14 +61,12 @@ songs.put("/:id", async (req, res) => {
 //     res.status(200).json(updatedSong);
 //   });
 
-//delete
+// delete
 songs.delete("/:id", async (req, res) => {
   // const id = req.params.id;
   const { id } = req.params;
-
   const deletedSong = await deleteSong(id);
-  res.json({ song_deleted: true, payload: deletedSong })
-  // res.status(200).json(deletedSong);
+  res.json(deletedSong);
 });
 
 module.exports = songs;
